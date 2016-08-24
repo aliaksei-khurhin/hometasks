@@ -12,7 +12,7 @@ interval = conf.get('common', 'interval')
 snapshot = 0
 
 #function to write information to txt file
-def textfile ():
+def textfile():
     global snapshot
     global txt_name
     snapshot += 1
@@ -32,13 +32,12 @@ def textfile ():
 
 
 #function to write information to txt file
-def jsonfile ():
+def jsonfile():
     global snapshot
     global json_name
     snapshot += 1
-    tm = time.time()
-    timestamp = datetime.datetime.fromtimestamp(tm).strftime('%Y-%m-%d %H:%M:%S')
-    #creating dictionary to store monitoring information
+
+#creating dictionary to store monitoring information
     monitor = {
         'CPU load': psutil.cpu_percent(percpu=True),
         'Overall memory usage': psutil.virtual_memory().used,
@@ -46,11 +45,11 @@ def jsonfile ():
         'IO information': [psutil.disk_io_counters()[0],psutil.disk_io_counters()[1]],
         'Nework information': [psutil.net_io_counters(pernic=False)[0],psutil.net_io_counters(pernic=False)[1]]
     }
-    #setting information format
+#setting information format
     data = ['SNAPSHOT ' + str(snapshot) + ': ' + str(timestamp), monitor]
-    #writiong data to json
+#writiong data to json
     with open(json_name, 'a+') as j:
-        json.dump(data,j,indent=4,sort_keys=True)
+        json.dump(data, j, indent=4, sort_keys=True)
 
 
 if output == 'txt':

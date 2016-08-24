@@ -1,4 +1,4 @@
-test='qwertrewq'
+test = input('Enter the word: ')
 
 if test[:(len(test)//2)] == test[len(test):(len(test)//2):-1]:
     print ('Word is polindrom')
