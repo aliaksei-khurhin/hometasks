@@ -5,10 +5,14 @@ import json
 import schedule
 import psutil
 
+
+# setting output files names
 txt_name = 'monitor.txt'
 json_name = 'monitor.json'
 snapshot = 0
 
+
+# reading settings from configuration file
 conf = configparser.ConfigParser()
 conf.read('settings.ini')
 output = conf.get('common', 'output')
@@ -16,6 +20,7 @@ interval = conf.get('common', 'interval')
 trace_enabled = conf.getboolean('common', 'decorator')
 
 
+# decorator
 def trace(func):
     def wrapper(*args, **kwargs):
         t = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
@@ -29,6 +34,7 @@ def trace(func):
 
 
 class test1:
+    # setting atributes to object
     def __init__(self):
         self.cpu = ('CPU load: '+str(psutil.cpu_percent(0, 0))+' %')
         self.mem = ('Overall memory usage: '+str((psutil.virtual_memory().used/1024/1024).__round__(2))+' Mb')
@@ -70,13 +76,7 @@ class test2(test1):
         global snapshot
         snapshot += 1
 # creating dictionary to store monitoring information
-        monitor = {
-            'CPU load': psutil.cpu_percent(percpu=True),
-            'Overall memory usage': psutil.virtual_memory().used,
-            'Overall virtual memory usage': psutil.swap_memory().used,
-            'IO information': [psutil.disk_io_counters()[0], psutil.disk_io_counters()[1]],
-            'Nework information': [psutil.net_io_counters(pernic=False)[0], psutil.net_io_counters(pernic=False)[1]]
-            }
+        monitor = [self.cpu, self.mem, self.swap, self.io_read, self.io_write, self.network_sent, self.network_received]
 # setting information format
         data = ['SNAPSHOT ' + str(snapshot) + ': ' + str(self.timestamp), monitor]
 # writing data to json
